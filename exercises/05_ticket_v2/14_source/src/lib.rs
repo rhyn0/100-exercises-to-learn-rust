@@ -1,3 +1,7 @@
+use std::error::Error;
+
+use status::ParseStatusError;
+
 use crate::status::Status;
 
 // We've seen how to declare modules in one of the earliest exercises, but
@@ -23,6 +27,8 @@ pub enum TicketNewError {
     DescriptionCannotBeEmpty,
     #[error("Description cannot be longer than 500 characters")]
     DescriptionTooLong,
+    #[error("{source}")]
+    StatusError { source: ParseStatusError },
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -47,12 +53,15 @@ impl Ticket {
             return Err(TicketNewError::DescriptionTooLong);
         }
 
-        // TODO: Parse the status string into a `Status` enum.
+        let status = Status::try_from(status);
+        if let Err(e) = status {
+            return Err(TicketNewError::StatusError { source: e });
+        }
 
         Ok(Ticket {
             title,
             description,
-            status,
+            status: status.unwrap(),
         })
     }
 }
