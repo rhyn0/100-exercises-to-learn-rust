@@ -461,6 +461,7 @@ version = "0.1.0"
 name = "outro_08"
 version = "0.1.0"
 dependencies = [
+ "ticket_fields",
  "tokio",
 ]
 

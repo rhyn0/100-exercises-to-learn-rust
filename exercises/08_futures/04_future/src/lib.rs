@@ -10,7 +10,8 @@ fn spawner() {
 }
 
 async fn example() {
-    let non_send = Rc::new(1);
     yield_now().await;
+    let non_send = Rc::new(1);
     println!("{}", non_send);
 }
+// so no await points (yield points) can occur after creating local non `Send` attributes
